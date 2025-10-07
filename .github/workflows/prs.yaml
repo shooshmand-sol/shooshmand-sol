@@ -1,0 +1,16 @@
+on:
+    pull_request:
+        types: [opened, reopened, synchronize]
+
+jobs:
+    ci:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Run unit tests
+              run: |
+                echo "Running unit tests..."
+                sleep 10
