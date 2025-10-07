@@ -17,4 +17,5 @@ jobs:
                 echo "Check run name: ${{ github.event.check_run.name }}"
                 echo "Check run conclusion: ${{ github.event.check_run.conclusion }}"
                 echo "Check run status: ${{ github.event.check_run.status }}"
+                echo "Check run head_sha : ${{ github.event.check_run.head_sha }}"
                 # Add your logic here to handle the check run event
