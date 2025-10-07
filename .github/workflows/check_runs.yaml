@@ -31,9 +31,18 @@ jobs:
                     echo "⚠️ Required check '$required_check' not found"
                     ALL_REQUIRED_PASSED=false
                   elif [[ "$check_conclusion" == "success" ]]; then
-                    echo "✅ Required check '$required_check' passed"
+                    echo "✔️ Required check '$required_check' passed"
                   else
                     echo "❌ Required check '$required_check' failed with status: $check_conclusion"
                     ALL_REQUIRED_PASSED=false
                   fi
                 done
+
+                # Set result
+                if [[ "$ALL_REQUIRED_PASSED" == "true" ]]; then
+                  echo ""
+                  echo "🟢 All required checks have passed!"
+                  echo "all_required_passed=true" >> $GITHUB_OUTPUT
+                else
+                  echo "all_required_passed=false" >> $GITHUB_OUTPUT
+                fi
