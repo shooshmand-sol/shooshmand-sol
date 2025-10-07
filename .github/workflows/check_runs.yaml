@@ -13,9 +13,11 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                echo "Check run event received."
-                echo "Check run name: ${{ github.event.check_run.name }}"
-                echo "Check run conclusion: ${{ github.event.check_run.conclusion }}"
-                echo "Check run status: ${{ github.event.check_run.status }}"
-                echo "Check run head_sha : ${{ github.event.check_run.head_sha }}"
-                # Add your logic here to handle the check run event
+                echo "Check run event ${{ github.event.check_run.name }} for ${{ github.event.check_run.head_sha }} with result ${{ github.event.check_run.conclusion }}"
+                echo "Now, checking if all required checks have passed..."
+                gh api /repos/${{ github.repository }}/commits/${{ github.event.check_run.head_sha }}/check-runs --jq '.check_runs[] | {id, name, conclusion}'  > reported_status_checks_for_commit.json
+                while IFS= read -r check_run; do
+                  name=$(echo "$check_run" | jq -r '.name')
+                  conclusion=$(echo "$check_run" | jq -r '.conclusion')
+                  echo "Check: $name Status: $conclusion"
+                done < reported_status_checks_for_commit.json
