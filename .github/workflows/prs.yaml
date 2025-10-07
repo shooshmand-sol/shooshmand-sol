@@ -19,4 +19,4 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                gh api --method POST "/repos/${{ github.repository }}/statuses/${{ github.sha }}" -f state="success" -f context="Tests_Passed" -f description="No need to check for external tests in PRs")
+                gh api --method POST "/repos/${{ github.repository }}/statuses/${{ github.sha }}" -f state="success" -f context="Tests_Passed" -f description="No need to check for external tests in PRs"
