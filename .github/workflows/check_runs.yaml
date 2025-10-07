@@ -25,8 +25,8 @@ jobs:
                   echo "Checking required status: $required_check"
 
                   # Find the status of this required check
-                  check_conclusion=$(jq -r --arg name "$required_check" '.name == $name | select(.) | .conclusion' reported_status_checks_for_commit.json | head -1)
- 
+                  check_conclusion=$(jq -r --arg name "$required_check" 'select(.name == $name) | .conclusion' reported_status_checks_for_commit.json | head -1)
+
                   if [[ -z "$check_conclusion" ]]; then
                     echo "⚠️ Required check '$required_check' not found"
                     ALL_REQUIRED_PASSED=false
