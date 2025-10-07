@@ -1,0 +1,20 @@
+on:
+    check_run:
+        types: [completed]
+jobs:
+    check_runs:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Process check run event
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                echo "Check run event received."
+                echo "Check run name: ${{ github.event.check_run.name }}"
+                echo "Check run conclusion: ${{ github.event.check_run.conclusion }}"
+                echo "Check run status: ${{ github.event.check_run.status }}"
+                # Add your logic here to handle the check run event
