@@ -10,6 +10,7 @@ jobs:
               uses: actions/checkout@v3
 
             - name: Process check run event
+              id: process_check_run_event
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
@@ -42,7 +43,18 @@ jobs:
                 if [[ "$ALL_REQUIRED_PASSED" == "true" ]]; then
                   echo ""
                   echo "🟢 All required checks have passed!"
-                  echo "all_required_passed=true" >> $GITHUB_OUTPUT
+                  echo "all_required_checks_passed=true" >> $GITHUB_OUTPUT
                 else
-                  echo "all_required_passed=false" >> $GITHUB_OUTPUT
+                  echo "all_required_checks_passed=false" >> $GITHUB_OUTPUT
                 fi
+                echo "check_run_sha=${{ github.event.check_run.head_sha }}" >> $GITHUB_OUTPUT
+            - name: Send final status check
+              if: ${{steps.process_check_run_event.outputs.all_required_checks_passed == 'true'}}
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                if [[ "${{ steps.process_check_run_event.outputs.all_required_checks_passed }}" == "true" ]]; then
+                  echo "✅ All required checks passed. Sending success status."
+                  gh api --method POST "/repos/${{ github.repository }}/statuses/${{ steps.process_check_run_event.outputs.check_run_sha }}" -f state="success" -f context="Tests_Passed" -f description="All required checks have passed."
+                fi
+        
