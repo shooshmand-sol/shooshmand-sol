@@ -14,7 +14,7 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                echo "Check run event ${{ github.event.check_run.name }} for ${{ github.event.check_run.head_sha }} with result ${{ github.event.check_run.conclusion }}"
+                echo "I'm in branch X, run event ${{ github.event.check_run.name }} for ${{ github.event.check_run.head_sha }} with result ${{ github.event.check_run.conclusion }}"
                 echo "Now, checking if all required checks have passed..."
                 gh api /repos/${{ github.repository }}/commits/${{ github.event.check_run.head_sha }}/check-runs --jq '.check_runs[] | {id, name, conclusion}'  > reported_status_checks_for_commit.json
                 # Define required status checks
