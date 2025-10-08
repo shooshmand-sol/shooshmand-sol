@@ -1,0 +1,60 @@
+on:
+    check_run:
+        types: [completed]
+jobs:
+    check_runs:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Process check run event
+              id: process_check_run_event
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                echo "I'm in branch X, run event ${{ github.event.check_run.name }} for ${{ github.event.check_run.head_sha }} with result ${{ github.event.check_run.conclusion }}"
+                echo "Now, checking if all required checks have passed..."
+                gh api /repos/${{ github.repository }}/commits/${{ github.event.check_run.head_sha }}/check-runs --jq '.check_runs[] | {id, name, conclusion}'  > reported_status_checks_for_commit.json
+                # Define required status checks
+                REQUIRED_CHECKS=("afw_st" "solpy")
+                ALL_REQUIRED_PASSED=true
+
+                # Check each required check
+                for required_check in "${REQUIRED_CHECKS[@]}"; do
+                  echo "Checking required status: $required_check"
+
+                  # Find the status of this required check
+                  check_conclusion=$(jq -r --arg name "$required_check" 'select(.name == $name) | .conclusion' reported_status_checks_for_commit.json | head -1)
+
+                  if [[ -z "$check_conclusion" ]]; then
+                    echo "⚠️ Required check '$required_check' not found"
+                    ALL_REQUIRED_PASSED=false
+                  elif [[ "$check_conclusion" == "success" ]]; then
+                    echo "✔️ Required check '$required_check' passed"
+                  else
+                    echo "❌ Required check '$required_check' failed with status: $check_conclusion"
+                    ALL_REQUIRED_PASSED=false
+                  fi
+                done
+
+                # Set result
+                if [[ "$ALL_REQUIRED_PASSED" == "true" ]]; then
+                  echo ""
+                  echo "🟢 All required checks have passed!"
+                  echo "all_required_checks_passed=true" >> $GITHUB_OUTPUT
+                else
+                  echo "all_required_checks_passed=false" >> $GITHUB_OUTPUT
+                fi
+                echo "check_run_sha=${{ github.event.check_run.head_sha }}" >> $GITHUB_OUTPUT
+            - name: Send final status check
+              if: ${{steps.process_check_run_event.outputs.all_required_checks_passed == 'true'}}
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                if [[ "${{ steps.process_check_run_event.outputs.all_required_checks_passed }}" == "true" ]]; then
+                  echo "✅ All required checks passed. Sending success status."
+                  gh api --method POST "/repos/${{ github.repository }}/statuses/${{ steps.process_check_run_event.outputs.check_run_sha }}" -f state="success" -f context="Tests_Passed" -f description="All required checks have passed."
+                fi
+        
