@@ -4,7 +4,7 @@ on:
         types: [completed]
 env:
   CHECK_RUN_HANDLER_ACTION_PATH: ./.github/actions/check_run_handler
-  REQUIRED_BRANCH_PREFIXES: "gh-readonly-queue/,cicd_mq_test/"
+  REQUIRED_BRANCH_PREFIXES: "gh-readonly-queue/,Y,main"
 jobs:
     process_check_runs:
         runs-on: ubuntu-latest
