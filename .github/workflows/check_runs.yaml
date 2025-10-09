@@ -2,6 +2,8 @@ name: Process Check Runs
 on:
     check_run:
         types: [completed]
+env:
+  CHECK_RUN_HANDLER_ACTION_PATH: ./.github/actions/check_run_handler
 jobs:
     process_check_runs:
         runs-on: ubuntu-latest
@@ -28,7 +30,19 @@ jobs:
 
                 # 4. End the output with the delimiter on its own line
                 echo "$DELIMITER" >> $GITHUB_OUTPUT
+
+                # 5. Check if the composite action directory exists
+                CHECK_RUN_HANDLER_ACTION_PATH="$CHECK_RUN_HANDLER_ACTION_PATH"
+
+                if [ -d "$CHECK_RUN_HANDLER_ACTION_PATH" ]; then
+                  echo "Composite action found at $CHECK_RUN_HANDLER_ACTION_PATH."
+                  echo "check_run_handler_exists=true" >> $GITHUB_OUTPUT
+                else
+                  echo "🚨 Composite action NOT found at $CHECK_RUN_HANDLER_ACTION_PATH. Skipping execution."
+                  echo "check_run_handler_exists=false" >> $GITHUB_OUTPUT
+                fi
           - name: Process current check_run
+            if: steps.prepare.outputs.check_run_handler_exists == 'true'
             # 2. Pass the JSON string output to the composite action's input
             uses: ./.github/actions/check_run_handler
             with:
