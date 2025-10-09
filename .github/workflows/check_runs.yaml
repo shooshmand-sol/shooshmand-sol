@@ -8,6 +8,7 @@ env:
 jobs:
     process_check_runs:
         runs-on: ubuntu-latest
+        if: contains(fromJson('["gh-readonly-queue", "Y"]'), github.event.check_run.check_suite.head_branch)
         steps:
           - name: Checkout code
             uses: actions/checkout@v5
