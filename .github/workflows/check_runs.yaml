@@ -30,6 +30,6 @@ jobs:
                 echo "$DELIMITER" >> $GITHUB_OUTPUT
           - name: Process current check_run
             # 2. Pass the JSON string output to the composite action's input
-            uses: ./.github/actions/check_run_handler.yaml
+            uses: ./.github/actions/check_run_handler
             with:
               check-run-data: ${{ steps.prepare.outputs.check_run_json }}
