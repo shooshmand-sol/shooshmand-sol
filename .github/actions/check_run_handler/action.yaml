@@ -1,0 +1,27 @@
+#composite action
+name: 'Check Run Handler'
+description: 'Handles check run events and performs actions based on check run names'
+
+inputs:
+    # 1. Define an input to receive the check run data string
+    check-run-data:
+        description: 'The check_run event context as a JSON string'
+        required: true
+
+runs:
+    using: "composite"
+    steps:
+        - name: Print Check Run Name
+          shell: bash
+          run: |
+            # 2. Access the input string
+            CHECK_RUN_DATA='${{ inputs.check-run-data }}'
+            
+            # 3. Use 'jq' to parse the JSON string and extract specific fields
+            CHECK_NAME=$(echo "$CHECK_RUN_DATA" | jq -r '.name')
+            CONCLUSION=$(echo "$CHECK_RUN_DATA" | jq -r '.conclusion')
+            
+            echo "--- Check Run Details ---"
+            echo "Name: $CHECK_NAME"
+            echo "Conclusion: $CONCLUSION"
+            echo "-------------------------"
