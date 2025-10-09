@@ -1,11 +1,18 @@
 on:
     check_run:
         types: [completed]
-        # Use the 'if' condition on the workflow itself to filter the event properties
-if: github.event.check_run.name != 'DoNotRunWorkflowCheck'
 jobs:
-    check_runs:
+    process_check_runs:
         runs-on: ubuntu-latest
         steps:
-            - name: Check run name
-              run: echo "Check run name is ${{ github.event.check_run.name }}"
+          - name: Prepare Check Run Context
+            id: prepare
+            # Use the built-in toJSON function to convert the object to a string
+            run: |
+              CHECK_RUN_JSON='${{ toJSON(github.event.check_run) }}'
+              echo "check_run_json=$CHECK_RUN_JSON" >> $GITHUB_OUTPUT
+          - name: Process current check_run
+            # 2. Pass the JSON string output to the composite action's input
+            uses: ./.github/actions/check_run_handler.yaml
+            with:
+              check-run-data: ${{ steps.prepare.outputs.check_run_json }}
