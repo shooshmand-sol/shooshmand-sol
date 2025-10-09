@@ -6,6 +6,11 @@ jobs:
     process_check_runs:
         runs-on: ubuntu-latest
         steps:
+          - name: Checkout code
+            uses: actions/checkout@v5
+            with:
+              ref: ${{ github.event.check_run.head_sha }}
+
           - name: Prepare Check Run Context
             id: prepare
             # Use the built-in toJSON function to convert the object to a string
