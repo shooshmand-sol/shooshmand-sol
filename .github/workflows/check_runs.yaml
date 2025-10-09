@@ -9,8 +9,19 @@ jobs:
             id: prepare
             # Use the built-in toJSON function to convert the object to a string
             run: |
-              CHECK_RUN_JSON='${{ toJSON(github.event.check_run) }}'
-              echo "check_run_json=$CHECK_RUN_JSON" >> $GITHUB_OUTPUT
+                # 1. Define a unique delimiter (e.g., EOF or a custom string)
+                DELIMITER=$(uuidgen)
+
+                # 2. Start the output command with the variable name and the delimiter
+                echo "check_run_json<<$DELIMITER" >> $GITHUB_OUTPUT
+
+                # 3. Print the multi-line JSON content
+                # The 'toJSON' function ensures the output is a single JSON string,
+                # but the string itself will be multi-line (pretty-printed) if complex.
+                echo '${{ toJSON(github.event.check_run) }}' >> $GITHUB_OUTPUT
+
+                # 4. End the output with the delimiter on its own line
+                echo "$DELIMITER" >> $GITHUB_OUTPUT
           - name: Process current check_run
             # 2. Pass the JSON string output to the composite action's input
             uses: ./.github/actions/check_run_handler.yaml
