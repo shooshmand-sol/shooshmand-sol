@@ -1,0 +1,11 @@
+on:
+    check_run:
+        types: [completed]
+        # Use the 'if' condition on the workflow itself to filter the event properties
+if: github.event.check_run.name != 'DoNotRunWorkflowCheck'
+jobs:
+    check_runs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check run name
+              run: echo "Check run name is ${{ github.event.check_run.name }}"
