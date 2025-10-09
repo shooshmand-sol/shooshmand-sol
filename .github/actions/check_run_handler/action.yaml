@@ -20,8 +20,10 @@ runs:
             # 3. Use 'jq' to parse the JSON string and extract specific fields
             CHECK_NAME=$(echo "$CHECK_RUN_DATA" | jq -r '.name')
             CONCLUSION=$(echo "$CHECK_RUN_DATA" | jq -r '.conclusion')
+            HEAD_SHA=$(echo "$CHECK_RUN_DATA" | jq -r '.head_sha')
             
             echo "--- Check Run Details ---"
             echo "Name: $CHECK_NAME"
             echo "Conclusion: $CONCLUSION"
+            echo "Head SHA: $HEAD_SHA"
             echo "-------------------------"
