@@ -17,6 +17,8 @@ jobs:
             id: prepare
             # Use the built-in toJSON function to convert the object to a string
             run: |
+                #Checks if the composite action exists and prepares the check_run JSON string
+
                 # 1. Define a unique delimiter (e.g., EOF or a custom string)
                 DELIMITER=$(uuidgen)
 
