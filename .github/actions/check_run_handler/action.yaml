@@ -27,3 +27,5 @@ runs:
             echo "Conclusion: $CONCLUSION"
             echo "Head SHA: $HEAD_SHA"
             echo "-------------------------"
+
+            cat ./t.txt
