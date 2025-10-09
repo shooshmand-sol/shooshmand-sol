@@ -9,8 +9,6 @@ set -euo pipefail
 #   123456 my-org my-repo ./private-key.pem \
 #   1a2b3c4d5e6f7 success "Tests Passed" "All automated tests have passed ✅"
 
-echo "Hi"
-
 APP_ID="$1"
 OWNER="$2"
 REPO="$3"
