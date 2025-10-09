@@ -1,3 +1,4 @@
+name: Check Runs Processor
 on:
     check_run:
         types: [completed]
