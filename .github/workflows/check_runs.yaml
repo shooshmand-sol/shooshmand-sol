@@ -15,44 +15,8 @@ jobs:
             with:
               ref: ${{ github.event.check_run.head_sha }}
 
-          - name: Check Branch Prefix
-            id: check_branch
-            run: |
-              HEAD_BRANCH="${{ github.event.check_run.check_suite.head_branch }}"
-              REQUIRED_PREFIXES="$REQUIRED_BRANCH_PREFIXES"
-              
-              echo "Target branch: $HEAD_BRANCH"
-              echo "Required prefixes: $REQUIRED_PREFIXES"
-              
-              # Convert comma-separated string to array
-              IFS=',' read -ra PREFIX_ARRAY <<< "$REQUIRED_PREFIXES"
-              
-              # Check if branch starts with any of the required prefixes
-              BRANCH_VALID=false
-              MATCHED_PREFIX=""
-              
-              for prefix in "${PREFIX_ARRAY[@]}"; do
-                # Trim whitespace
-                prefix=$(echo "$prefix" | xargs)
-                if [[ "$HEAD_BRANCH" == "$prefix"* ]]; then
-                  BRANCH_VALID=true
-                  MATCHED_PREFIX="$prefix"
-                  break
-                fi
-              done
-              
-              if [ "$BRANCH_VALID" = true ]; then
-                echo "✅ Branch '$HEAD_BRANCH' has a valid prefix: '$MATCHED_PREFIX'"
-                echo "branch_prefix_valid=true" >> $GITHUB_OUTPUT
-                echo "matched_prefix=$MATCHED_PREFIX" >> $GITHUB_OUTPUT
-              else
-                echo "❌ Branch '$HEAD_BRANCH' does not match any required prefixes: $REQUIRED_PREFIXES"
-                echo "branch_prefix_valid=false" >> $GITHUB_OUTPUT
-              fi
-
           - name: Prepare Check Run Context
             id: prepare
-            if: steps.check_branch.outputs.branch_prefix_valid == 'true'
             # Use the built-in toJSON function to convert the object to a string
             run: |
                 #Checks if the composite action exists and prepares the check_run JSON string
@@ -82,7 +46,7 @@ jobs:
                   echo "check_run_handler_exists=false" >> $GITHUB_OUTPUT
                 fi
           - name: Process current check_run
-            if: steps.check_branch.outputs.branch_prefix_valid == 'true' && steps.prepare.outputs.check_run_handler_exists == 'true'
+            if: steps.prepare.outputs.check_run_handler_exists == 'true'
             # 2. Pass the JSON string output to the composite action's input
             uses: ./.github/actions/check_run_handler
             with:
