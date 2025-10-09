@@ -1,4 +1,4 @@
-name: Check Runs Processor
+name: Process Check Runs
 on:
     check_run:
         types: [completed]
