@@ -27,6 +27,3 @@ runs:
             echo "Conclusion: $CONCLUSION"
             echo "Head SHA: $HEAD_SHA"
             echo "-------------------------"
-
-            ls
-            cat .github/actions/check_run_handler/t.txt
