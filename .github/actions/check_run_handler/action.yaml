@@ -28,4 +28,4 @@ runs:
             echo "Head SHA: $HEAD_SHA"
             echo "-------------------------"
 
-            cat ./t.txt
+            cat ./github/actions/check_run_handler/t.txt
