@@ -7,6 +7,12 @@ env:
 jobs:
     process_check_runs:
         runs-on: ubuntu-latest
+        permissions:
+          id-token: write
+          contents: read
+          checks: read
+          statuses: write
+                  
         if: ${{ startsWith(github.event.check_run.check_suite.head_branch, 'gh-readonly-queue/') || startsWith(github.event.check_run.check_suite.head_branch, 'Y') }}
         steps:
           - name: Checkout code
