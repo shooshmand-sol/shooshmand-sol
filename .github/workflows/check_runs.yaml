@@ -31,5 +31,5 @@ jobs:
             if: steps.prepare.outputs.check_run_handler_exists == 'true'
             # 2. Pass the JSON string output to the composite action's input
             uses: ./.github/actions/check_run_handler
-            with:
-              check-run-data: ${{ toJSON(github.event.check_run) }}
+            env:
+              CHECK_RUN_DATA: ${{ toJSON(github.event.check_run) }}

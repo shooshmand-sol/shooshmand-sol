@@ -2,16 +2,8 @@
 name: 'Check Run Handler'
 description: 'Handles check run events and performs actions based on check run names'
 
-inputs:
-    # 1. Define an input to receive the check run data string
-    check-run-data:
-        description: 'The check_run event context as a JSON string'
-        required: true
-
 runs:
     using: "composite"
-    env:
-        CHECK_RUN_DATA: ${{ inputs.check-run-data }}    
     steps:
         - name: Print Check Run Name
           shell: bash
