@@ -8,12 +8,14 @@ env:
 jobs:
     process_check_runs:
         runs-on: ubuntu-latest
-        if: contains(fromJson('["gh-readonly-queue", "Y"]'), github.event.check_run.check_suite.head_branch)
+        if: ${{ startsWith(github.event.check_run.check_suite.head_branch, 'gh-readonly-queue/') || startsWith(github.event.check_run.check_suite.head_branch, 'Y') }}
         steps:
           - name: Checkout code
             uses: actions/checkout@v5
             with:
               ref: ${{ github.event.check_run.head_sha }}
+              sparse-checkout: |
+                .github/actions/check_run_handler/**
 
           - name: Prepare Check Run Context
             id: prepare
