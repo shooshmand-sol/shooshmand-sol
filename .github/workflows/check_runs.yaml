@@ -19,27 +19,8 @@ jobs:
 
           - name: Prepare Check Run Context
             id: prepare
-            # Use the built-in toJSON function to convert the object to a string
             run: |
-                #Checks if the composite action exists and prepares the check_run JSON string
-
-                # 1. Define a unique delimiter (e.g., EOF or a custom string)
-                DELIMITER=$(uuidgen)
-
-                # 2. Start the output command with the variable name and the delimiter
-                echo "check_run_json<<$DELIMITER" >> $GITHUB_OUTPUT
-
-                # 3. Print the multi-line JSON content
-                # The 'toJSON' function ensures the output is a single JSON string,
-                # but the string itself will be multi-line (pretty-printed) if complex.
-                echo '${{ toJSON(github.event.check_run) }}' >> $GITHUB_OUTPUT
-
-                # 4. End the output with the delimiter on its own line
-                echo "$DELIMITER" >> $GITHUB_OUTPUT
-
-                # 5. Check if the composite action directory exists
-                CHECK_RUN_HANDLER_ACTION_PATH="$CHECK_RUN_HANDLER_ACTION_PATH"
-
+                #Checks if the composite action exists
                 if [ -d "$CHECK_RUN_HANDLER_ACTION_PATH" ]; then
                   echo "Composite action found at $CHECK_RUN_HANDLER_ACTION_PATH."
                   echo "check_run_handler_exists=true" >> $GITHUB_OUTPUT
@@ -52,4 +33,8 @@ jobs:
             # 2. Pass the JSON string output to the composite action's input
             uses: ./.github/actions/check_run_handler
             with:
+<<<<<<< HEAD
               check-run-data: ${{ steps.prepare.outputs.check_run_json }}
+=======
+              check-run-data: ${{ toJSON(github.event.check_run) }}
+>>>>>>> 9f71c9d09bc7d542d0414ea189d6b7a098a387a8
