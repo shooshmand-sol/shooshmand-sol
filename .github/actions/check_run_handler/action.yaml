@@ -16,7 +16,7 @@ runs:
         - name: Print Check Run Name
           shell: bash
           run: |
-            echo "Starting Check Run Handler Action"
+            echo "Starting Check Run Handler Action new version..."
             # 3. Use 'jq' to parse the JSON string and extract specific fields
             CHECK_NAME=$(echo "$CHECK_RUN_DATA" | jq -r '.name')
             CONCLUSION=$(echo "$CHECK_RUN_DATA" | jq -r '.conclusion')
