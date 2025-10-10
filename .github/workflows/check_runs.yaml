@@ -15,7 +15,7 @@ jobs:
             with:
               ref: ${{ github.event.check_run.head_sha }}
               sparse-checkout: |
-                .github/actions/check_run_handler/**
+                .github/actions/check_run_handler
 
           - name: Prepare Check Run Context
             id: prepare
