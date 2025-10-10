@@ -10,13 +10,12 @@ inputs:
 
 runs:
     using: "composite"
+    env:
+        CHECK_RUN_DATA: ${{ inputs.check-run-data }}    
     steps:
         - name: Print Check Run Name
           shell: bash
-          run: |
-            # 2. Access the input string
-            CHECK_RUN_DATA='${{ inputs.check-run-data }}'
-            
+          run: |            
             # 3. Use 'jq' to parse the JSON string and extract specific fields
             CHECK_NAME=$(echo "$CHECK_RUN_DATA" | jq -r '.name')
             CONCLUSION=$(echo "$CHECK_RUN_DATA" | jq -r '.conclusion')
