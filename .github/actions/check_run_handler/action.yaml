@@ -25,7 +25,7 @@ runs:
         - name: Test GitHub Token
           shell: bash
           run: |
-            echo "Testing GitHub Token... ${GITHUB_TOKEN:0:6}****"
+            echo "Testing GitHub Token using env... ${GITHUB_TOKEN:0:6}****"
             curl -s -H "Authorization: token $GITHUB_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
                 "https://api.github.com/repos/${GITHUB_REPOSITORY}"
