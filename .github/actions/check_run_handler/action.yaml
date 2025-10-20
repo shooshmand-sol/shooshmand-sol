@@ -27,7 +27,7 @@ runs:
           env:
             GITHUB_TOKEN: ${{ inputs.github_token }}
           run: |
-            echo "Testing GitHub Token... ${GITHUB_TOKEN:0:4}****"
+            echo "Testing GitHub Token... ${GITHUB_TOKEN:0:6}****"
             curl -s -H "Authorization: token $GITHUB_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
                 "https://api.github.com/repos/${GITHUB_REPOSITORY}"
