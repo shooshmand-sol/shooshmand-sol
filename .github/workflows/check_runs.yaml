@@ -40,4 +40,5 @@ jobs:
             uses: ./.github/actions/check_run_handler
             env:
               CHECK_RUN_DATA: ${{ toJSON(github.event.check_run) }}
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
