@@ -1,10 +1,10 @@
 #composite action
 name: 'Check Run Handler'
 description: 'Handles check run events and performs actions based on check run names'
-inputs:
-  github_token:
-      description: 'GitHub Token for authentication'
-      required: true
+# inputs:
+#   github_token:
+#       description: 'GitHub Token for authentication'
+#       required: true
 runs:
     using: "composite"
     steps:
@@ -21,8 +21,6 @@ runs:
             echo "-------------------------"
         - name: Test GitHub Token
           shell: bash
-          env:
-            GITHUB_TOKEN: ${{ inputs.github_token }}
           run: |
             echo "Testing GitHub Token..."
             curl -s -H "Authorization: token $GITHUB_TOKEN" \
