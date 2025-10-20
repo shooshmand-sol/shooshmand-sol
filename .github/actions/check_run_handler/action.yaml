@@ -26,6 +26,6 @@ runs:
           shell: bash
           run: |
             echo "Testing GitHub Token..."
-            curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            curl -s -H "Authorization: token ${{ inputs.github_token }}" \
                  -H "Accept: application/vnd.github.v3+json" \
                  https://api.github.com/user | jq '.login // "Token failed"'
