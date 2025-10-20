@@ -21,8 +21,10 @@ runs:
             echo "-------------------------"
         - name: Test GitHub Token
           shell: bash
+          env:
+            GITHUB_TOKEN: ${{ inputs.github_token }}
           run: |
             echo "Testing GitHub Token..."
             curl -s -H "Authorization: token $GITHUB_TOKEN" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 https://api.github.com/user | jq '.login // "Token failed"'
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/${GITHUB_REPOSITORY}"
